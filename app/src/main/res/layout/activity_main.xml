@@ -13,7 +13,12 @@
         android:id="@+id/sortableTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:stv_textColor="@android:color/black"
-        app:stv_textSize="14sp" />
+        app:stv_headerTextColor="@android:color/white"
+        app:stv_rowTextColor="@android:color/black"
+        app:stv_textSize="15sp"
+        app:stv_headerBackground="@android:color/holo_orange_dark"
+        app:stv_rowBackground="@android:color/transparent"
+        app:stv_cellPadding="12dp" />
+
 
 </LinearLayout>

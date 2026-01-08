@@ -3,7 +3,10 @@ package com.ext.sortabletableview
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.TypedValue
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +26,15 @@ class SortableTableView @JvmOverloads constructor(
     private var currentSortAscending = true
 
     private val headerViews = mutableListOf<TextView>()
-    private val tableAdapter = TableRowAdapter()
+    private var headerTextColor = Color.BLACK
+    private var rowTextColor = Color.DKGRAY
+    private var textSizePx: Float = 14f
+    private var headerBackground: Drawable? = null
+    private var rowBackground: Drawable? = null
+    private var cellPaddingPx = 16
+    private lateinit var tableAdapter: TableRowAdapter
+
+
 
 
     private val headerLayout: LinearLayout by lazy {
@@ -52,26 +63,64 @@ class SortableTableView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
         readAttributes(context, attrs)
+
+        tableAdapter = TableRowAdapter(
+            rowTextColor,
+            textSizePx,
+            cellPaddingPx,
+            rowBackground
+        )
+
+        recyclerView.adapter = tableAdapter
+
         addView(headerLayout)
         addView(recyclerView)
-        recyclerView.adapter = tableAdapter
     }
+
 
     private fun readAttributes(context: Context, attrs: AttributeSet?) {
         if (attrs == null) return
 
-        val typedArray = context.obtainStyledAttributes(
+        val ta = context.obtainStyledAttributes(
             attrs,
             R.styleable.SortableTableView
         )
 
-        val textColor = typedArray.getColor(
-            R.styleable.SortableTableView_stv_textColor,
+        headerTextColor = ta.getColor(
+            R.styleable.SortableTableView_stv_headerTextColor,
             Color.BLACK
         )
 
-        typedArray.recycle()
+        rowTextColor = ta.getColor(
+            R.styleable.SortableTableView_stv_rowTextColor,
+            Color.DKGRAY
+        )
+
+        textSizePx = ta.getDimension(
+            R.styleable.SortableTableView_stv_textSize,
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                14f,
+                resources.displayMetrics
+            )
+        )
+
+        cellPaddingPx = ta.getDimensionPixelSize(
+            R.styleable.SortableTableView_stv_cellPadding,
+            16
+        )
+
+        headerBackground = ta.getDrawable(
+            R.styleable.SortableTableView_stv_headerBackground
+        )
+
+        rowBackground = ta.getDrawable(
+            R.styleable.SortableTableView_stv_rowBackground
+        )
+
+        ta.recycle()
     }
+
 
     fun setHeaders(headers: List<String>) {
         headerLayout.removeAllViews()
@@ -80,14 +129,11 @@ class SortableTableView @JvmOverloads constructor(
         headers.forEachIndexed { index, title ->
             val textView = TextView(context).apply {
                 text = title
-                setPadding(16, 16, 16, 16)
-                layoutParams = LayoutParams(
-                    0,
-                    LayoutParams.WRAP_CONTENT,
-                    1f
-                )
+                setTextColor(headerTextColor)
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx)
+                setPadding(cellPaddingPx, cellPaddingPx, cellPaddingPx, cellPaddingPx)
+                layoutParams = LayoutParams(0, WRAP_CONTENT, 1f)
                 setTypeface(typeface, Typeface.BOLD)
-
                 setOnClickListener {
                     handleSort(index)
                     updateSortIcons()
@@ -97,7 +143,11 @@ class SortableTableView @JvmOverloads constructor(
             headerViews.add(textView)
             headerLayout.addView(textView)
         }
+        headerBackground?.let {
+            headerLayout.background = it
+        }
     }
+
 
     fun setData(rows: List<TableRowData>) {
         tableData = rows

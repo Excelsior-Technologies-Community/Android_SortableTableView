@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="SortableTableView">
-        <attr name="stv_headerBackground" format="color" />
-        <attr name="stv_rowBackground" format="color" />
-        <attr name="stv_textColor" format="color" />
+
+        <!-- Text -->
+        <attr name="stv_headerTextColor" format="color" />
+        <attr name="stv_rowTextColor" format="color" />
         <attr name="stv_textSize" format="dimension" />
-        <attr name="stv_sortIcon" format="reference" />
+
+        <!-- Backgrounds -->
+        <attr name="stv_headerBackground" format="color|reference" />
+        <attr name="stv_rowBackground" format="color|reference" />
+
+        <!-- Padding -->
+        <attr name="stv_cellPadding" format="dimension" />
+
     </declare-styleable>
+
 </resources>
