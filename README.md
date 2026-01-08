@@ -134,7 +134,7 @@ table.setData(rows)
 
 ---
 
-### 🎨 XML Attributes
+### XML Attributes
 
 | Attribute | Description |
 |---------|------------|
