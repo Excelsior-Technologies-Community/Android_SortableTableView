@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SortableTableView">
+        <attr name="stv_headerBackground" format="color" />
+        <attr name="stv_rowBackground" format="color" />
+        <attr name="stv_textColor" format="color" />
+        <attr name="stv_textSize" format="dimension" />
+        <attr name="stv_sortIcon" format="reference" />
+    </declare-styleable>
+</resources>
